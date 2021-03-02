@@ -146,35 +146,33 @@ stopCluster(cl)
 saveRDS(success_m500, file = "output_m500.rds")
 
 # Results for PR-GAMP obtained using the code available from https://sourceforge.net/projects/gampmatlab/
-prgamp_k20 = c(0, 0.69, 0.91, 0.98, 1, 1, 1, 1, 1, 1)
-prgamp_m500 = c(1, 1, 1, 1, 0.99, 0.98, 0.97, 0.93, 0.9, 0.84, 0.79, 0.78,
-                0.81, 0.68, 0.79, 0.71, 0.72, 0.66, 0.57, 0.52, 0.48, 0.49, 0.47)
-
+prgamp_k20 = c(0, 0.28, 0.79, 0.92, 1, 1, 1, 1, 1, 1)
+prgamp_m500 = c(1, 1, 1, 0.96, 0.88, 0.85, 0.75, 0.71, 0.63, 0.53, 0.45, 0.31, 0.28, 0.14, 0.12)
 
 ### Generate plot ###
 
-pdf(file = "plot_k20m500.pdf", width = 7, height = 3)
+pdf(file = "plot_k20m500.pdf", width = 8, height = 3)
 
 par(mfrow=c(1,2), mai = c(0.7, 0.7, 0.1, 0.1), bg = "transparent")
 
 # Left plot: k=20 fixed
 plot(prgamp_k20, type = "o", lwd = 2, pch = 4, col = "brown", ylim = c(0,1), ylab = "", xlab = "", xaxt = "n")
-axis(1, at = (1:10), label = 100*(1:10), cex.axis = 1)
-title(xlab = "Number of measurements m", ylab = "Success rate", line = 2.2, cex.lab = 1.3)
+axis(1, at = (1:10), label = 100*(1:10))
+title(xlab = "Number of measurements m", ylab = "Success rate", line = 2.5)
 lines(apply(success_k20, c(1,3), mean)[,2], type = "o", lwd = 2, pch = 18, col = "magenta")
 lines(apply(success_k20, c(1,3), mean)[,3], type = "o", lwd = 2, pch = 15, col = "blue")
 lines(apply(success_k20, c(1,3), mean)[,4], type = "o", lwd = 2, pch = 17, col = "black")
 lines(apply(success_k20, c(1,3), mean)[,1], type = "o", lwd = 2, pch = 16, col = "red")
-legend('bottomright',legend=c("HWF", "SWF", "SPARTA", "PR-GAMP", "SPARTA-support"), col=c("red", "black", "blue", "brown", "magenta"), pch = c(16,17,15,4,18), lwd = 2, cex = 0.75, inset = c(0, -0.03), bty = "n")
+legend('bottomright',legend=c("HWF", "SWF", "SPARTA", "PR-GAMP", "SPARTA-support"), col=c("red", "black", "blue", "brown", "magenta"), pch = c(16,17,15,4,18), lwd = 2, cex = 0.8, inset = c(0, -0.03), bty = "n")
 
 # Right plot: m=500 fixed
 plot(prgamp_m500, type = "o", lwd = 2, pch = 4, col = "brown", ylim = c(0,1), ylab = "", xlab = "", xaxt = "n")
-axis(1, at = (1 + 2*(0:11)), label = 10*(1:12), cex.axis = 1)
-title(xlab = "Sparsity level k", ylab = "Success rate", line = 2.2, cex.lab = 1.3)
+axis(1, at = (1 + 2*(0:11)), label = 10*(1:12))
+title(xlab = "Sparsity level k", ylab = "Success rate", line = 2.5)
 lines(apply(success_m500, c(1,3), mean)[,2], type = "o", lwd = 2, pch = 18, col = "magenta")
 lines(apply(success_m500, c(1,3), mean)[,3], type = "o", lwd = 2, pch = 15, col = "blue")
 lines(apply(success_m500, c(1,3), mean)[,4], type = "o", lwd = 2, pch = 17, col = "black")
 lines(apply(success_m500, c(1,3), mean)[,1], type = "o", lwd = 2, pch = 16, col = "red")
-legend('bottomleft',legend=c("HWF", "SWF", "SPARTA", "PR-GAMP", "SPARTA-support"), col=c("red", "black", "blue", "brown", "magenta"), pch = c(16,17,15,4,18), lwd = 2, cex = 0.75, inset = c(0, -0.03), bty = "n")
+legend('bottomleft',legend=c("HWF", "SWF", "SPARTA", "PR-GAMP", "SPARTA-support"), col=c("red", "black", "blue", "brown", "magenta"), pch = c(16,17,15,4,18), lwd = 2, cex = 0.8, inset = c(0, -0.03), bty = "n")
 
 dev.off()

@@ -3,6 +3,7 @@
 library(foreach)
 library(doParallel)
 library(abind)
+library(latex2exp)
 
 source("algorithms.R")
 
@@ -81,34 +82,35 @@ stopCluster(cl)
 saveRDS(success_xmax, file = "output_xmax.rds")
 
 # Results for PR-GAMP obtained using the code available from https://sourceforge.net/projects/gampmatlab/
-pr_gamp1 = c(1,0.96,0.9,0.69,0.66,0.57,0.57,0.36,0.41,0.27,0.14,0.11,0.04,0,0,0,0,0,0,0,0,0,0)
-pr_gamp2 = c(1,1,1,0.99,1,1,0.99,0.98,0.98,0.91,0.88,0.83,0.8,0.79,0.82,0.79,0.74,0.64,0.63,0.6,0.55,0.53,0.52)
-pr_gamp3 = c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0.99,1,1,1)
+pr_gamp1 = c(0.95, 0.69, 0.34, 0.16, 0.04, 0.02, 0, 0, 0, 0, 0, 0, 0, 0, 0) #, 0, 0, 0, 0)
+pr_gamp2 = c(1, 1, 0.99, 1, 0.95, 0.91, 0.89, 0.65, 0.63, 0.56, 0.49, 0.37, 0.38, 0.22, 0.24) #, 0.2, 0.17, 0.08, 0.07)
+pr_gamp3 = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.99)
+pr_gamp4 = c(0, 0.01, 0.12, 0.33, 0.54, 0.78, 0.9, 0.98, 1, 1, 1, 1)
 
 ### Generate plot ###
 
-pdf(file = "plot_xmax.pdf", width = 13, height = 2.5)
+pdf(file = "plot_xmax.pdf", width = 13, height = 3)
 
 par(mfrow=c(1,3), mai = c(0.5, 0.7, 0.1, 0.1), bg = "transparent")
 
 # Left plot: x_max = 1/sqrt(k)
-plot(apply(success_xmax, c(1,2,4), mean)[,1,1], type = "o", lwd = 2, pch = 16, col = "red", ylim = c(0,1), ylab = "", xlab = "", xaxt = "n", cex.axis = 1.4)
+plot(pr_gamp1, type = "o", lwd = 2, pch = 4, col = "brown", ylim = c(0,1), ylab = "", xlab = "", xaxt = "n", cex.axis = 1.4)
 axis(1, at = (1 + 2*(0:11)), label = 10*(1:12), cex.axis = 1.4)
 title(xlab = "Sparsity level k", ylab = "Success rate", line = 2.5, cex.lab = 1.7)
 lines(apply(success_xmax, c(1,2,4), mean)[,1,2], type = "o", lwd = 2, pch = 18, col = "magenta")
 lines(apply(success_xmax, c(1,2,4), mean)[,1,3], type = "o", lwd = 2, pch = 15, col = "blue")
 lines(apply(success_xmax, c(1,2,4), mean)[,1,4], type = "o", lwd = 2, pch = 17, col = "black")
-lines(pr_gamp1, type = "o", lwd = 2, pch = 4, col = "brown")
+lines(apply(success_xmax, c(1,2,4), mean)[,1,1], type = "o", lwd = 2, pch = 16, col = "red")
 legend('topright',legend=c("HWF", "SWF", "SPARTA", "PR-GAMP", "SPARTA-support"), col=c("red", "black", "blue", "brown", "magenta"), pch = c(16,17,15,4,18), lwd = 2, cex = 1.3, inset = c(0.01, -0.03), bty = "n")
 
 # Middle plot: x_max = k^(-0.25)
-plot(apply(success_xmax, c(1,2,4), mean)[,2,1], type = "o", lwd = 2, pch = 16, col = "red", ylim = c(0,1), ylab = "", xlab = "", xaxt = "n", cex.axis = 1.4)
+plot(pr_gamp2, type = "o", lwd = 2, pch = 4, col = "brown", ylim = c(0,1), ylab = "", xlab = "", xaxt = "n", cex.axis = 1.4)
 axis(1, at = (1 + 2*(0:11)), label = 10*(1:12), cex.axis = 1.4)
 title(xlab = "Sparsity level k", ylab = "Success rate", line = 2.5, cex.lab = 1.7)
 lines(apply(success_xmax, c(1,2,4), mean)[,2,2], type = "o", lwd = 2, pch = 18, col = "magenta")
 lines(apply(success_xmax, c(1,2,4), mean)[,2,3], type = "o", lwd = 2, pch = 15, col = "blue")
 lines(apply(success_xmax, c(1,2,4), mean)[,2,4], type = "o", lwd = 2, pch = 17, col = "black")
-lines(pr_gamp2, type = "o", lwd = 2, pch = 4, col = "brown")
+lines(apply(success_xmax, c(1,2,4), mean)[,2,1], type = "o", lwd = 2, pch = 16, col = "red")
 legend('bottomleft',legend=c("HWF", "SWF", "SPARTA", "PR-GAMP", "SPARTA-support"), col=c("red", "black", "blue", "brown", "magenta"), pch = c(16,17,15,4,18), lwd = 2, cex = 1.3, inset = c(0.01, -0.03), bty = "n")
 
 # Right plot: x_max = 0.7

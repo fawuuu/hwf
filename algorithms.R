@@ -61,10 +61,8 @@ gen_data_sparse = function(m, n, k, xmax = 1, maxval = 1){
     }
   }
   
-  # Generate Gaussian measurement matrix A
   A = matrix(rnorm(m*n), nrow = m, ncol = n)
   
-  # Generate vector of observations y
   y = as.vector((A%*%x)^2)
   
   return(list(A = A, x = x, y = y))
@@ -119,7 +117,6 @@ hwf = function(A, y, ini, step = 0.1, alpha = 1e-3, eps = 1e-7, iteration = 100)
     v_cur = v_cur * (1 + r)
     x_cur = u_cur^2 - v_cur^2
     
-    # Save new estimate
     X[t,] = x_cur
     
     # Stop algorithm if estimates diverge
@@ -142,16 +139,10 @@ hwf = function(A, y, ini, step = 0.1, alpha = 1e-3, eps = 1e-7, iteration = 100)
   return(X)
 }
 
-# Define Algorithm 4
-# A: measurement matrix
-# y: vector of observations
-# k: sparsity level
-# step: step size
+# Define SPARTA-support
 # trial: number of allowed restarts
-# trunc_thresh, gamma: truncation thresholds
-# eps: stopping criterion 
-# iteration: maximum number of iterations
-alg4 = function(A, y, k, step = 0.1, trial = 1, trunc_thresh = 1/6, gamma = 1, eps = 1e-7, iteration = 100){
+# trunc_thresh, gamma: parameters of SPARTA
+sparta_sup = function(A, y, k, step = 0.1, trial = 1, trunc_thresh = 1/6, gamma = 1, eps = 1e-7, iteration = 100){
   m = nrow(A)
   n = ncol(A)
   X = matrix(0, nrow = iteration, ncol = n)
@@ -184,7 +175,6 @@ alg4 = function(A, y, k, step = 0.1, trial = 1, trunc_thresh = 1/6, gamma = 1, e
       x_cur = x_cur - step * rwf_grad(x_cur, A[ind_update,], sqrt(y[ind_update])) * length(ind_update) / m
       x_cur[sort(abs(x_cur), index.return = TRUE)$ix[1:(n-k)]] = 0 
     }
-    # Save new estimate
     X[t,] = x_cur
     
     # Stop algorithm if estimates diverge
@@ -208,19 +198,12 @@ alg4 = function(A, y, k, step = 0.1, trial = 1, trunc_thresh = 1/6, gamma = 1, e
 }
 
 # Define SPARTA
-# A: measurement matrix
-# y: vector of observations
-# k: sparsity level
-# step: step size
-# trunc_thresh, gamma: truncation thresholds
-# eps: stopping criterion 
-# iteration: maximum number of iterations
 sparta = function(A, y, k, step = 1, trunc_thresh = 1/6, gamma = 1, eps = 1e-7, iteration = 100){
   m = nrow(A)
   n = ncol(A)
   X = matrix(0, nrow = iteration, ncol = n)
     
-  # Initialization - support recovery
+  #Initialization - support recovery
   ind_sup = sort(t(A^2) %*% y, index.return = TRUE)$ix[(n-k+1):n]
   
   # Orthogonality promoting initialization
@@ -246,7 +229,6 @@ sparta = function(A, y, k, step = 1, trunc_thresh = 1/6, gamma = 1, eps = 1e-7, 
       x_cur = x_cur - step * rwf_grad(x_cur, A[ind_update,], sqrt(y[ind_update])) * length(ind_update) / m
       x_cur[sort(abs(x_cur), index.return = TRUE)$ix[1:(n-k)]] = 0 
     }
-    # Save new estimate
     X[t,] = x_cur
     
     # Stop algorithm if estimates diverge
@@ -270,12 +252,6 @@ sparta = function(A, y, k, step = 1, trunc_thresh = 1/6, gamma = 1, eps = 1e-7, 
 }
 
 # Define SWF
-# A: measurement matrix
-# y: vector of observations
-# k: sparsity level
-# alpha_y: truncation threshold
-# eps: stopping criterion 
-# iteration: maximum number of iterations
 swf = function(A, y, k, alpha_y = 3, eps = 1e-7, iteration = 100){
   m = nrow(A)
   n = ncol(A)
@@ -306,7 +282,6 @@ swf = function(A, y, k, alpha_y = 3, eps = 1e-7, iteration = 100){
     # Thresholded gradient updates
     x_cur = x_cur - step/phi * wf_grad(x_cur, A, y)
     x_cur[sort(abs(x_cur), index.return = TRUE)$ix[1:(n-k)]] = 0 
-    # Save new estimate
     X[t,] = x_cur
     
     # Stop algorithm if estimates diverge

@@ -3,7 +3,9 @@
 library(foreach)
 library(doParallel)
 library(abind)
-library(gplots)
+library(ggplot2)
+library(tidyr)
+library(tibble)
 
 source("algorithms.R")
 
@@ -11,7 +13,7 @@ acomb <- function(...) abind(..., along=3)
 
 ### Experiments for Figure 4 ###
 n = 500           # Dimension of signal vector x
-k = 5 + 5*(1:23)  # Sparsity level of x
+k = 5 + 5*(1:19)  # Sparsity level of x
 m = 100 * (1:10)  # Number of observations 
 num_rep = 100     # Number of Monte Carlo trials
 num_try = 50      # Maximum number of allowed restarts
@@ -60,11 +62,11 @@ pdf(file = "plot_heatmap.pdf", width = 7, height = 3)
 result = data.frame(apply(success, c(1,2), mean))
 
 row.names(result) <- 100 * (1:10)
-colnames(result) <- 5 + 5 * (1:23)
+colnames(result) <- 5 + 5 * (1:19)
 
 # Estimate the mean of x_max of our signal
-kxmax = rep(0, 23)
-for(i in 1:23){
+kxmax = rep(0, 19)
+for(i in 1:19){
   for(j in 1:100000){
     temp = rnorm(5 + 5*i)
     temp = temp / sqrt(sum(temp^2))
@@ -74,14 +76,14 @@ for(i in 1:23){
 
 # Define the curve m = 1/3 * k(x^*_max)^(-2)log(n/k)
 pointdata <- data.frame(
-  xname = 1:23, 
-  ypos = (5 + 5*(1:23)) * log(500/(5+5*(1:23))) / (3 * kxmax^2)  + 100
+  xname = 1:18, 
+  ypos = k[1:18] * log(n/k[1:18]) / (3 * kxmax[1:18]^2)  + 100
 ) 
 
 result2 <- result %>% rownames_to_column() %>% gather(sparsity,  p_success, -rowname)
 
 level_sparsity <- c('10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '60', '65', '70',
-                    '75', '80', '85', '90', '95', '100', '105', '110', '115', '120')
+                    '75', '80', '85', '90', '95', '100')
 level_obs <- c('100', '200', '300', '400', '500', '600', '700', '800', '900', '1000')
 
 ggplot() + geom_tile(result2, mapping = aes(x = factor(sparsity, levels = level_sparsity), y = as.numeric(rowname, levels = level_obs),
@@ -90,8 +92,6 @@ ggplot() + geom_tile(result2, mapping = aes(x = factor(sparsity, levels = level_
   scale_x_discrete(limits=level_sparsity, breaks=level_sparsity[seq(1,length(level_sparsity),by=2)]) +
   geom_line(data = pointdata, mapping = aes(xname, ypos), size = 0.5, col = "black") +
   scale_y_continuous(breaks=c(100,200,300,400,500,600,700,800,900,1000),expand=c(0,0)) + 
-  theme(panel.background = element_rect(fill = "transparent", colour = NA),
-        plot.background = element_rect(fill = "transparent", colour = NA), 
-        axis.text=element_text(size=11), axis.title=element_text(size=13))
+  theme(panel.background = element_rect(fill = "transparent", colour = NA), plot.background = element_rect(fill = "transparent", colour = NA))#,  panel.border = element_rect(colour = "black", fill=NA, size=0)) 
 
 dev.off()

@@ -129,8 +129,8 @@ par(mfrow=c(1,2), mai = c(0.7, 0.7, 0.1, 0.1), bg = "transparent")
 
 # Left plot: k=20 fixed
 plot(apply(plot_numtrial1k20, 2, mean), type = "o", lwd = 2, pch = 16, col = "red", ylim = c(0,1), ylab = "", xlab = "", xaxt = "n")
-axis(1, at = (1:10), label = 100*(1:10), cex.axis = 1.2)
-title(xlab = "Number of measurements m", ylab = "Success rate", line = 2.2, cex.lab = 1.4)
+axis(1, at = (1:10), label = 100*(1:10))
+title(xlab = "Number of measurements m", ylab = "Success rate", line = 2.5)
 lines(apply(plot_numtrial5k20, 2, mean), type = "o", lwd = 2, pch = 18, col = "magenta")
 lines(apply(plot_numtrial10k20, 2, mean), type = "o", lwd = 2, pch = 15, col = "blue")
 lines(apply(plot_numtrial50k20, 2, mean), type = "o", lwd = 2, pch = 17, col = "black")
@@ -139,8 +139,8 @@ legend('bottomright',legend=c("B=1", "B=5", "B=10", "B=50", "B=100"), col=c("red
 
 # Right plot: m=500 fixed
 plot(apply(plot_numtrial1m500, 2, mean), type = "o", lwd = 2, pch = 16, col = "red", ylim = c(0,1), ylab = "", xlab = "", xaxt = "n")
-axis(1, at = (1 + 2*(0:11)), label = 10*(1:12), cex.axis = 1.2)
-title(xlab = "Sparsity level k", ylab = "Success rate", line = 2.2, cex.lab = 1.4)
+axis(1, at = (1 + 2*(0:11)), label = 10*(1:12))
+title(xlab = "Sparsity level k", ylab = "Success rate", line = 2.5)
 lines(apply(plot_numtrial5m500, 2, mean), type = "o", lwd = 2, pch = 18, col = "magenta")
 lines(apply(plot_numtrial10m500, 2, mean), type = "o", lwd = 2, pch = 15, col = "blue")
 lines(apply(plot_numtrial50m500, 2, mean), type = "o", lwd = 2, pch = 17, col = "black")
